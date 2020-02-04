@@ -59,7 +59,27 @@ void create_element(struct list_element* start, int i, char n[15][50], int k) {
 
 }
 
+void print_element(struct list_element* start, int i, char n[15][50], int k) {
+	struct list_element* new_node;
+	new_node = start;
 
+	while (i) {
+		if (new_node->next)
+			new_node = new_node->next;
+		else {
+			printf("Element doesnt exist!");
+			system("pause");
+			return;
+		}
+		i--;
+	}
+	if (new_node)
+		for (int i = 0; i < k; i++)
+			printf(" %s: %s \n", n[i], new_node->string[i]);
+	else
+		printf("List is empty!");
+	system("pause");
+}
 
 
 int main(void) {
@@ -84,7 +104,7 @@ int main(void) {
 
 	do {
 		system("cls");
-		printf("Press '1' to add a new Element \nAny other key ends the program \n");
+		printf("Press '1' to add a new Element \nPress '2' to print an Element \nAny other key ends the program \n");
 		menue = getchar();
 		switch (menue) {
 		case '1':
@@ -92,6 +112,12 @@ int main(void) {
 			scanf_s(" %d", &nr);
 			while (getchar() == "\n");
 			create_element(start, nr, names, kom);
+			break;
+		case '2':
+			printf("which one should I print?");
+			scanf_s(" %d", &nr);
+			while (getchar() == "\n");
+			print_element(start, nr, names, kom);
 			break;
 		default:
 			printf("do you really want to exit? (j/n) \n");
