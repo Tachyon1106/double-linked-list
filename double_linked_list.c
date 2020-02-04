@@ -81,6 +81,29 @@ void print_element(struct list_element* start, int i, char n[15][50], int k) {
 	system("pause");
 }
 
+void delete_element(struct list_element* start, int i) {
+	struct list_element* nextsafe;
+
+	struct list_element* new_node;
+	new_node = start;
+	while (i) {
+		if (new_node->next)
+			new_node = new_node->next;
+		else {
+			printf("Element doesn't exist!");
+			system("pause");
+			return;
+		}
+		i--;
+	}
+
+	new_node->prev->next = new_node->next;
+	if (new_node->next)
+		new_node->next->prev = new_node->prev;
+
+	free(new_node);
+	system("pause");
+}
 
 int main(void) {
 	int nr = 0, check = 1, kom = 0;
@@ -104,7 +127,7 @@ int main(void) {
 
 	do {
 		system("cls");
-		printf("Press '1' to add a new Element \nPress '2' to print an Element \nAny other key ends the program \n");
+		printf("Press '1' to add a new Element \nPress '2' to print an Element \nPress '3' to delete an Element \nAny other key ends the program \n");
 		menue = getchar();
 		switch (menue) {
 		case '1':
@@ -118,6 +141,12 @@ int main(void) {
 			scanf_s(" %d", &nr);
 			while (getchar() == "\n");
 			print_element(start, nr, names, kom);
+			break;
+		case '3':
+			printf("which one should i delete?");
+			scanf_s(" %d", &nr);
+			while (getchar() == "\n");
+			delete_element(start, nr);
 			break;
 		default:
 			printf("do you really want to exit? (j/n) \n");
