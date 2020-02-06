@@ -1,4 +1,4 @@
 # double-linked-list
 programming project
 
-Only works on Windows 
+Only tested and designed for Windows, maybe works on other systems as well (not guarenteed) 
