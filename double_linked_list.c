@@ -121,6 +121,36 @@ void print_all(struct list_element* start, char n[15][50], int k) {
 	system("pause");
 }
 
+void search_element(struct list_element* start, char n[15][50], int k) {
+	char search[50];
+	int scan = 1, z, i = 0;
+	struct list_element* new_node;
+	new_node = start;
+
+	printf("Which number has the component you want to search for?");
+	scanf_s(" %d", &z);
+	while (getchar() == "\n");
+
+	printf("what are you looking for?");
+	gets_s(search, 50);
+	if (new_node)
+		while (new_node->next) {
+			new_node = new_node->next;
+			i = 0;
+			scan = 1;
+			while (i < 50 && search[i] != '\0' && scan) {
+				if (search[i] == new_node->string[z - 1][i]);
+				else
+					scan = 0;
+				i++;
+			}
+			if (scan)
+				for (int i = 0; i < k; i++)
+					printf(" %s: %s \n", n[i], new_node->string[i]);
+		}
+	system("pause");
+}
+
 int main(void) {
 	int nr = 0, check = 1, kom = 0;
 	char menue = 0;
@@ -143,7 +173,7 @@ int main(void) {
 
 	do {
 		system("cls");
-		printf("Press '1' to add a new Element \nPress '2' to print an Element \nPress '3' to delete an Element \nPress '4' to print all Elements \nAny other key ends the program \n");
+		printf("Press '1' to add a new Element \nPress '2' to print an Element \nPress '3' to delete an Element \nPress '4' to print all Elements \nPress '5' to search for Elements \nAny other key ends the program \n");
 		menue = getchar();
 		switch (menue) {
 		case '1':
@@ -167,9 +197,12 @@ int main(void) {
 		case '4':
 			print_all(start, names, kom);
 			break;
+		case '5':
+			search_element(start, names, kom);
+			break;
 		default:
 			printf("do you really want to exit? (j/n) \n");
-			scanf_s(" %c", &t);
+			scanf_s(" %c", &t, 1);
 			while (getchar() == "\n");
 			if (t == 'j')
 				check = 0;
