@@ -105,6 +105,22 @@ void delete_element(struct list_element* start, int i) {
 	system("pause");
 }
 
+void print_all(struct list_element* start, char n[15][50], int k) {
+	struct list_element* new_node;
+	new_node = start;
+
+
+	if (new_node)
+		while (new_node->next) {
+			new_node = new_node->next;
+			for (int i = 0; i < k; i++)
+				printf(" %s: %s \n", n[i], new_node->string[i]);
+		}
+	else
+		printf("list is empty!");
+	system("pause");
+}
+
 int main(void) {
 	int nr = 0, check = 1, kom = 0;
 	char menue = 0;
@@ -127,7 +143,7 @@ int main(void) {
 
 	do {
 		system("cls");
-		printf("Press '1' to add a new Element \nPress '2' to print an Element \nPress '3' to delete an Element \nAny other key ends the program \n");
+		printf("Press '1' to add a new Element \nPress '2' to print an Element \nPress '3' to delete an Element \nPress '4' to print all Elements \nAny other key ends the program \n");
 		menue = getchar();
 		switch (menue) {
 		case '1':
@@ -147,6 +163,9 @@ int main(void) {
 			scanf_s(" %d", &nr);
 			while (getchar() == "\n");
 			delete_element(start, nr);
+			break;
+		case '4':
+			print_all(start, names, kom);
 			break;
 		default:
 			printf("do you really want to exit? (j/n) \n");
