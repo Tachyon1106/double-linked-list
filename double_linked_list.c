@@ -64,13 +64,11 @@ void create_element(struct list_element* start, int i, char n[15][50], int k) {
 			gets_s(new_node->next->string[i], 50);
 		}
 	}
-
 }
 
 void print_element(struct list_element* start, int i, char n[15][50], int k) {
 	struct list_element* new_node;
 	new_node = start;
-
 	while (i) {
 		if (new_node->next)
 			new_node = new_node->next;
@@ -114,31 +112,31 @@ void delete_element(struct list_element* start, int i) {
 }
 
 void print_all(struct list_element* start, char n[15][50], int k) {
+
+	errno_t err;
 	struct list_element* new_node;
 	new_node = start;
 	FILE* datei;
-	fopen_s(&datei, "list.txt", "w");
-	if (datei == NULL) {
+	err = fopen_s(&datei, "list.txt", "w+");
+	if (err)
 		printf("File couldnt be opened for saving the list!");
-	}
-
-
-	if (new_node)
-		while (new_node->next) {
-			new_node = new_node->next;
-			if (datei != NULL) {
-				fprintf(datei, "/@$\n");
-			}
-			for (int i = 0; i < k; i++) {
-				printf(" %s: %s \n", n[i], new_node->string[i]);
-				if (datei != NULL) {
-					fprintf(datei, " %s: %s \n", n[i], new_node->string[i]);
+	else {
+		if (new_node)
+			while (new_node->next) {
+				new_node = new_node->next;
+				if (datei != NULL)
+					fprintf(datei, "/@$\n");
+				for (int i = 0; i < k; i++) {
+					printf(" %s: %s \n", n[i], new_node->string[i]);
+					if (datei != NULL)
+						fprintf(datei, " %s: %s \n", n[i], new_node->string[i]);
 				}
+				fprintf(datei, "/$@");
 			}
-		}
-	else
-
-		printf("list is empty!");
+		else
+			printf("list is empty!");
+	}
+	fclose(datei);
 	system("pause");
 }
 
@@ -157,7 +155,7 @@ void search_element(struct list_element* start, char n[15][50], int k) {
 	while (checkForString(new_node->next->string[i])) {
 		printf("please enter something else!: ");
 		gets_s(search, 50);
-		}
+	}
 	if (new_node)
 		while (new_node->next) {
 			new_node = new_node->next;
@@ -170,6 +168,7 @@ void search_element(struct list_element* start, char n[15][50], int k) {
 				i++;
 			}
 			if (scan)
+
 				for (int i = 0; i < k; i++)
 					printf(" %s: %s \n", n[i], new_node->string[i]);
 		}
@@ -184,12 +183,47 @@ int checkForString(char n[50]) {
 	return 0;
 }
 
+void sort(struct list_element* start, int elementtosort, char n[15][50], int k) {
+	char safe[50][50];
+	int count[50], swap, load2 = 0, nr = 0;
+	struct list_element* new_node;
+	new_node = start;
+
+	while (new_node->next) {
+		new_node = new_node->next;
+		nr++;
+		for (int load3 = 0; load3 < 50; load3++)
+			safe[load2][load3] = new_node->string[elementtosort][load3];
+		load2++;
+	}
+
+	for (int load = 0; load < nr; load++)
+		count[load] = load;
+
+	for (int j = 0; j < nr - 1; j++)
+		for (int i = 0; i < nr - 1; i++)
+			if (safe[count[i]][0] >= safe[count[i + 1]][0]) {
+				swap = count[i];
+				count[i] = count[i + 1];
+				count[i + 1] = swap;
+			}
+
+	for (int j = 0; j < nr; j++) {
+		new_node = start;
+		for (int i = 0; i <= count[j]; i++)
+			new_node = new_node->next;
+		for (int c = 0; c < k; c++)
+			printf(" %s : %s \n", n[c], new_node->string[c]);
+	}
+
+	system("pause");
+}
+
 int main(void) {
 	int nr = 0, check = 1, kom = 0;
 	char menue = 0;
 	char names[15][50];
 	char t;
-
 	struct list_element* start;
 	start = malloc(sizeof(struct list_element));
 	if (!start)
@@ -210,7 +244,7 @@ int main(void) {
 
 	do {
 		system("cls");
-		printf("Press '1' to add a new Element \nPress '2' to print an Element \nPress '3' to delete an Element \nPress '4' to print all Elements and save them into a text document\nPress '5' to search for Elements \nAny other key ends the program \n");
+		printf("Press '1' to add a new Element \nPress '2' to print an Element \nPress '3' to delete an Element \nPress '4' to print all Elements and save them into a text document\nPress '5' to search for Elements \nPress '6' to see the sorted List \nAny other key ends the program \n");
 		menue = getchar();
 		switch (menue) {
 		case '1':
@@ -232,20 +266,26 @@ int main(void) {
 			delete_element(start, nr);
 			break;
 		case '4':
+			while (getchar() == "\n");
 			print_all(start, names, kom);
 			break;
 		case '5':
 			search_element(start, names, kom);
 			break;
+		case '6':
+			printf("Which number has the criteria you want to sort after?");
+			scanf_s(" %d", &nr);
+			while (getchar() == "\n");
+			sort(start, nr - 1, names, kom);
+			break;
 		default:
 			printf("do you really want to exit? (j/n) \n");
-			scanf_s(" %c", &t);
+			scanf_s(" %c", &t, 1);
 			while (getchar() == "\n");
 			if (t == 'j')
 				check = 0;
 			break;
 		}
 	} while (check);
-
 	system("pause");
 }
